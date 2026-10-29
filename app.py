@@ -1,6 +1,12 @@
 from pathlib import Path
 
-from financas import adicionar_lancamento, carregar_lancamentos, resumo
+from financas import (
+    adicionar_lancamento,
+    carregar_lancamentos,
+    despesas_por_categoria,
+    exportar_csv,
+    resumo,
+)
 
 
 ARQUIVO_DADOS = Path("dados.json")
@@ -23,6 +29,7 @@ def mostrar_menu() -> None:
     print("2. Registrar despesa")
     print("3. Listar lançamentos")
     print("4. Ver resumo")
+    print("5. Exportar para CSV")
     print("0. Sair")
 
 
@@ -46,10 +53,20 @@ def main() -> None:
                 sinal = "+" if item["tipo"] == "receita" else "-"
                 print(f'{item["data"]} | {item["descricao"]} | {sinal} R$ {item["valor"]:.2f}')
         elif opcao == "4":
-            dados = resumo(carregar_lancamentos(ARQUIVO_DADOS))
+            lancamentos = carregar_lancamentos(ARQUIVO_DADOS)
+            dados = resumo(lancamentos)
             print(f'Receitas: R$ {dados["receitas"]:.2f}')
             print(f'Despesas: R$ {dados["despesas"]:.2f}')
             print(f'Saldo: R$ {dados["saldo"]:.2f}')
+            categorias = despesas_por_categoria(lancamentos)
+            if categorias:
+                print("Despesas por categoria:")
+                for categoria, total in categorias.items():
+                    print(f"- {categoria}: R$ {total:.2f}")
+        elif opcao == "5":
+            destino = Path("relatorio.csv")
+            exportar_csv(destino, carregar_lancamentos(ARQUIVO_DADOS))
+            print(f"Relatório criado em {destino.resolve()}")
         elif opcao == "0":
             print("Até mais!")
             break
@@ -59,3 +76,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
