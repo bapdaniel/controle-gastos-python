@@ -1,4 +1,5 @@
 import json
+import csv
 from datetime import date
 from pathlib import Path
 
@@ -53,3 +54,21 @@ def resumo(lancamentos: list[dict]) -> dict[str, float]:
         "despesas": round(despesas, 2),
         "saldo": round(receitas - despesas, 2),
     }
+
+
+def despesas_por_categoria(lancamentos: list[dict]) -> dict[str, float]:
+    categorias: dict[str, float] = {}
+    for item in lancamentos:
+        if item["tipo"] == "despesa":
+            categoria = item["categoria"]
+            categorias[categoria] = round(categorias.get(categoria, 0) + item["valor"], 2)
+    return dict(sorted(categorias.items()))
+
+
+def exportar_csv(caminho: Path, lancamentos: list[dict]) -> None:
+    campos = ["id", "data", "tipo", "descricao", "categoria", "valor"]
+    with caminho.open("w", newline="", encoding="utf-8-sig") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor.writeheader()
+        escritor.writerows(lancamentos)
+
