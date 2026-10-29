@@ -1,6 +1,6 @@
 # Controle de Gastos em Python
 
-Aplicação de terminal para registrar receitas e despesas, listar lançamentos e exibir um resumo financeiro. Os dados ficam salvos localmente em JSON.
+Aplicação de terminal para registrar receitas e despesas, listar lançamentos, analisar despesas por categoria e exportar relatórios em CSV. Os dados ficam salvos localmente em JSON.
 
 ## O que pratiquei
 
@@ -10,6 +10,10 @@ Aplicação de terminal para registrar receitas e despesas, listar lançamentos 
 - leitura e gravação de arquivos JSON
 - validação de dados
 - testes automatizados com `unittest`
+
+## English summary
+
+Beginner-friendly Python expense tracker with JSON persistence, category summaries, CSV export and automated tests.
 
 ## Como executar
 
@@ -24,3 +28,4 @@ python -m unittest discover -s tests
 ```
 
 Projeto educacional desenvolvido durante o início do curso de Análise e Desenvolvimento de Sistemas.
+
