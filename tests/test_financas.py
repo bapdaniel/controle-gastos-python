@@ -2,7 +2,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from financas import adicionar_lancamento, carregar_lancamentos, resumo
+from financas import (
+    adicionar_lancamento,
+    carregar_lancamentos,
+    despesas_por_categoria,
+    exportar_csv,
+    resumo,
+)
 
 
 class FinancasTest(unittest.TestCase):
@@ -26,6 +32,28 @@ class FinancasTest(unittest.TestCase):
         ]
         self.assertEqual(resumo(itens)["saldo"], 749.50)
 
+    def test_agrupa_despesas_por_categoria(self):
+        itens = [
+            {"tipo": "despesa", "categoria": "Estudos", "valor": 20},
+            {"tipo": "despesa", "categoria": "Estudos", "valor": 30},
+            {"tipo": "receita", "categoria": "Renda", "valor": 100},
+        ]
+        self.assertEqual(despesas_por_categoria(itens), {"Estudos": 50})
+
+    def test_exporta_csv(self):
+        destino = Path(self.pasta.name) / "relatorio.csv"
+        itens = [{
+            "id": 1,
+            "data": "2026-10-29",
+            "tipo": "receita",
+            "descricao": "Bolsa",
+            "categoria": "Renda",
+            "valor": 500,
+        }]
+        exportar_csv(destino, itens)
+        self.assertIn("Bolsa", destino.read_text(encoding="utf-8-sig"))
+
 
 if __name__ == "__main__":
     unittest.main()
+
